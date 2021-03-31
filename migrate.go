@@ -116,6 +116,7 @@ func SetIgnoreUnknown(v bool) {
 
 type Migration struct {
 	Id   string
+	SQL  string
 	Up   []string
 	Down []string
 
@@ -167,8 +168,9 @@ func (b byId) Swap(i, j int)      { b[i], b[j] = b[j], b[i] }
 func (b byId) Less(i, j int) bool { return b[i].Less(b[j]) }
 
 type MigrationRecord struct {
-	Id        string    `db:"id"`
-	AppliedAt time.Time `db:"applied_at"`
+	Id           string    `db:"id"`
+	AppliedAt    time.Time `db:"applied_at"`
+	MigrationSQL string    `db:"migration_sql"`
 }
 
 type OracleDialect struct {
@@ -392,8 +394,15 @@ func (p PackrMigrationSource) FindMigrations() ([]*Migration, error) {
 
 // Migration parsing
 func ParseMigration(id string, r io.ReadSeeker) (*Migration, error) {
+	r1, err := io.ReadAll(r)
+	if err != nil {
+		return nil, err
+	}
+	r.Seek(0, io.SeekStart)
+
 	m := &Migration{
-		Id: id,
+		Id:  id,
+		SQL: string(r1),
 	}
 
 	parsed, err := sqlparse.ParseMigration(r)
@@ -475,8 +484,9 @@ func (ms MigrationSet) ExecMax(db *sql.DB, dialect string, m MigrationSource, di
 		switch dir {
 		case Up:
 			err = executor.Insert(&MigrationRecord{
-				Id:        migration.Id,
-				AppliedAt: time.Now(),
+				Id:           migration.Id,
+				AppliedAt:    time.Now(),
+				MigrationSQL: migration.Migration.SQL,
 			})
 			if err != nil {
 				if trans, ok := executor.(*gorp.Transaction); ok {
