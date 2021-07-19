@@ -4,7 +4,7 @@ import (
 	"flag"
 	"strings"
 
-	"github.com/rubenv/sql-migrate"
+	migrate "github.com/togglhire/sql-migrate"
 )
 
 type DownCommand struct {
