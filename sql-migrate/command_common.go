@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	migrate "github.com/togglhire/sql-migrate"
+	migrate "github.com/toggl/sql-migrate"
 )
 
 func ApplyMigrations(dir migrate.MigrationDirection, dryrun bool, limit int) error {

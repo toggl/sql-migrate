@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	migrate "github.com/togglhire/sql-migrate"
+	migrate "github.com/toggl/sql-migrate"
 )
 
 type RedoCommand struct {

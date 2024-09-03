@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	migrate "github.com/togglhire/sql-migrate"
+	migrate "github.com/toggl/sql-migrate"
 	"gopkg.in/gorp.v1"
 	"gopkg.in/yaml.v2"
 
