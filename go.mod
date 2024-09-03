@@ -1,4 +1,4 @@
-module github.com/togglhire/sql-migrate
+module github.com/toggl/sql-migrate
 
 go 1.16
 
